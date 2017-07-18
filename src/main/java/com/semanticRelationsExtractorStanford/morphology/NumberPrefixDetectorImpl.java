@@ -17,7 +17,12 @@ public class NumberPrefixDetectorImpl implements NumberPrefixDetector {
     }
 
     private boolean modelContainsPrefix(String token, int endIndex) {
-        return PrefixesCache.prefixesLengthsCacheSet.contains(token.substring(0, endIndex));
+        try {
+            Integer length = Integer.valueOf(token.substring(0, endIndex));
+            return PrefixesCache.prefixesLengthsCacheSet.contains(length);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

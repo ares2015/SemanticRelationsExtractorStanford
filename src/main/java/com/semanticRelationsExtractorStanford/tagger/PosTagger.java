@@ -8,7 +8,6 @@ import com.semanticRelationsExtractorStanford.tags.StanfordTags;
 import com.semanticRelationsExtractorStanford.tags.Tags;
 import com.semanticRelationsExtractorStanford.tokens.Tokenizer;
 import com.semanticRelationsExtractorStanford.tokens.TokenizerImpl;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -104,6 +103,7 @@ public class PosTagger {
                     index++;
                 }
             }
+            tagSequences.add(stringBuilder.toString());
         }
         return tagSequences;
     }
