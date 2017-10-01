@@ -1,7 +1,6 @@
 package com.semanticRelationsExtractorStanford.main;
 
-
-import com.semanticRelationsExtractorStanford.database.DatabaseAccessor;
+import com.semanticRelationsExtractorStanford.data.SemanticExtractionData;
 import com.semanticRelationsExtractorStanford.extraction.SemanticRelationsExtractor;
 import com.semanticRelationsExtractorStanford.factories.InputDataFactory;
 import com.semanticRelationsExtractorStanford.preprocessing.CapitalizedTokensPreprocessor;
@@ -11,9 +10,11 @@ import com.semanticRelationsExtractorStanford.tokens.Tokenizer;
 import com.semanticRelationsExtractorStanford.tokens.TokenizerImpl;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Oliver on 6/28/2017.
@@ -27,8 +28,6 @@ public class SemanticExtractionExecutorTest {
     private SemanticPreprocessor semanticPreprocessor;
 
     private SemanticRelationsExtractor semanticRelationsExtractor;
-
-    private DatabaseAccessor databaseAccessor;
 
     private Tokenizer tokenizer;
 
@@ -46,9 +45,9 @@ public class SemanticExtractionExecutorTest {
         SemanticPreprocessor semanticPreprocessor = (SemanticPreprocessor) context.getBean("semanticPreprocessor");
         SemanticRelationsExtractor semanticRelationsExtractor = (SemanticRelationsExtractor) context.getBean("semanticRelationsExtractor");
         tokenizer = new TokenizerImpl();
-        databaseAccessor = Mockito.mock(DatabaseAccessor.class);
+        List<SemanticExtractionData> semanticExtractionDataList = new ArrayList<SemanticExtractionData>();
         semanticExtractionExecutor = new SemanticExtractionExecutorImpl(inputDataFactory, capitalizedTokensPreprocessor,
-                posTagger, semanticPreprocessor, semanticRelationsExtractor, databaseAccessor, tokenizer, executorPath);
+                posTagger, semanticPreprocessor, semanticRelationsExtractor, tokenizer, executorPath, semanticExtractionDataList);
     }
 
     @Test

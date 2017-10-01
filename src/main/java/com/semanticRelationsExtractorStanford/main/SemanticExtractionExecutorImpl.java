@@ -3,7 +3,6 @@ package com.semanticRelationsExtractorStanford.main;
 import com.semanticRelationsExtractorStanford.data.InputData;
 import com.semanticRelationsExtractorStanford.data.SemanticExtractionData;
 import com.semanticRelationsExtractorStanford.data.SemanticPreprocessingData;
-import com.semanticRelationsExtractorStanford.database.DatabaseAccessor;
 import com.semanticRelationsExtractorStanford.extraction.SemanticRelationsExtractor;
 import com.semanticRelationsExtractorStanford.factories.InputDataFactory;
 import com.semanticRelationsExtractorStanford.preprocessing.CapitalizedTokensPreprocessor;
@@ -36,26 +35,27 @@ public class SemanticExtractionExecutorImpl implements SemanticExtractionExecuto
 
     private SemanticRelationsExtractor semanticRelationsExtractor;
 
-    private DatabaseAccessor databaseAccessor;
-
     private Tokenizer tokenizer;
 
     private String path;
 
     private Integer countSemanticallyProcessedSentences = 0;
 
+    private List<SemanticExtractionData> semanticExtractionDataList;
+
     public SemanticExtractionExecutorImpl(InputDataFactory inputDataFactory,
                                           CapitalizedTokensPreprocessor capitalizedTokensPreprocessor, PosTagger posTagger,
                                           SemanticPreprocessor semanticPreprocessor, SemanticRelationsExtractor semanticRelationsExtractor,
-                                          DatabaseAccessor databaseAccessor, Tokenizer tokenizer, String path) {
+                                          Tokenizer tokenizer, String path,
+                                          List<SemanticExtractionData> semanticExtractionDataList) {
         this.inputDataFactory = inputDataFactory;
         this.capitalizedTokensPreprocessor = capitalizedTokensPreprocessor;
         this.posTagger = posTagger;
         this.semanticPreprocessor = semanticPreprocessor;
         this.semanticRelationsExtractor = semanticRelationsExtractor;
-        this.databaseAccessor = databaseAccessor;
         this.tokenizer = tokenizer;
         this.path = path;
+        this.semanticExtractionDataList = semanticExtractionDataList;
     }
 
     @Override
@@ -98,8 +98,8 @@ public class SemanticExtractionExecutorImpl implements SemanticExtractionExecuto
                     } else {
                         List<String> tagsList = inputData.getTagsList();
                         List<String> tokensList = inputData.getTokensList();
-                        processSentence(tokensList, tagsList, sentence, object);
-                    }
+                            processSentence(tokensList, tagsList, sentence, object);
+                        }
                     System.out.println(nrOfProcessedSentences + " were sentences read and processed");
                     inputDataString = br.readLine();
                 } catch (Exception e) {
@@ -107,7 +107,7 @@ public class SemanticExtractionExecutorImpl implements SemanticExtractionExecuto
                     inputDataString = br.readLine();
                     continue;
                 }
-            }
+                }
             System.out.println(countSemanticallyProcessedSentences + " sentences were semantically processed.");
         } catch (final IOException e) {
             e.printStackTrace();
@@ -127,9 +127,11 @@ public class SemanticExtractionExecutorImpl implements SemanticExtractionExecuto
             SemanticExtractionData semanticExtractionData = semanticRelationsExtractor.extract(semanticPreprocessingData);
             semanticExtractionData.setSentence(sentence);
             semanticExtractionData.setObject(object);
-            if (!databaseAccessor.existsSemanticDataInDatabase(semanticExtractionData)) {
-                databaseAccessor.insertSemanticData(semanticExtractionData);
-            }
+            LOGGER.info("Adding semantic extraction data into list: " + semanticExtractionData.getAtomicSubject() + " | " + semanticExtractionData.getExtendedSubject()
+                    + "|" + semanticExtractionData.getAtomicVerbPredicate() + "|" + semanticExtractionData.getExtendedVerbPredicate() + "|" +
+                    semanticExtractionData.getAtomicNounPredicate() + "|" + semanticExtractionData.getExtendedNounPredicate() + "|" + semanticExtractionData.getSentence()
+                    + "|" + semanticExtractionData.getObject());
+            semanticExtractionDataList.add(semanticExtractionData);
         }
     }
 
