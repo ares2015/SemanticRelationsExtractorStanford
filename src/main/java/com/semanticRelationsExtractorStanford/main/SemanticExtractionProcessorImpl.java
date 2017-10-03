@@ -125,10 +125,13 @@ public class SemanticExtractionProcessorImpl implements SemanticExtractionProces
             int numberOfProcessedSentences = (Integer) future1.get() + (Integer) future2.get() + (Integer) future3.get() + (Integer) future4.get();
             LOGGER.info(numberOfProcessedSentences + " sentences were processed " + "in " + (elapsedTime / 1000) / 60 + " minutes and "
                     + (elapsedTime / 1000) % 60 + " seconds");
-            SemanticDataWriter semanticDataWriter = new SemanticDataWriterImpl(semanticExtractionDataList, writerPath, 3692120);
+            SemanticDataWriter semanticDataWriter = new SemanticDataWriterImpl(semanticExtractionDataList, writerPath, 3913343);
             semanticDataWriter.write();
-
         }
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        LOGGER.info("Process ended " + "in " + (elapsedTime / 1000) / 60 + " minutes and "
+                + (elapsedTime / 1000) % 60 + " seconds");
     }
 
 }
