@@ -34,15 +34,20 @@ public class SemanticDataWriterImpl implements SemanticDataWriter {
             fw = new FileWriter(path, true);
             bw = new BufferedWriter(fw);
             for (SemanticExtractionData semanticExtractionData : semanticExtractionDataList) {
-                String semanticDataRow = "\"" + id + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getAtomicSubject()) + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getExtendedSubject()) + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getAtomicVerbPredicate()) + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getExtendedVerbPredicate()) + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getAtomicNounPredicate()) + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getExtendedNounPredicate()) + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getSentence()) + "\"" + "," +
-                        "\"" + removeDoubleQuotes(semanticExtractionData.getObject()) + "\"";
+                String semanticDataRow = "";
+                try {
+                    semanticDataRow = "\"" + id + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getAtomicSubject()) + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getExtendedSubject()) + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getAtomicVerbPredicate()) + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getExtendedVerbPredicate()) + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getAtomicNounPredicate()) + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getExtendedNounPredicate()) + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getSentence()) + "\"" + "," +
+                            "\"" + removeDoubleQuotes(semanticExtractionData.getObject()) + "\"";
+                } catch (Exception e) {
+                    continue;
+                }
                 bw.write(semanticDataRow);
                 id++;
                 System.out.println("Writing into WikipediaSemanticExtractionData file: " + semanticDataRow);
